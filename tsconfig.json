@@ -1,7 +1,16 @@
 {
-    "compilerOptions": {
-        "module": "commonjs",
-        "jsx": "react",
-        "sourceMap": true
-    }
+  "compilerOptions": {
+    "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true,
+    "strictNullChecks": true,
+    "module": "esnext",
+    "jsx": "react",
+    "sourceMap": true
+  },
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }

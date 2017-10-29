@@ -5,32 +5,37 @@ interface ICounterStates {
 }
 
 interface ICounterProps extends React.Props<Counter> {
-  title: string;
   start: number;
+  interval?: number;
 }
 
 class Counter extends React.Component<ICounterProps, ICounterStates> {
-  constructor() {
-    super();
+  interval: number;
+  public static defaultProps: Partial<ICounterProps> = {
+    interval: 1000,
+  };
+
+  constructor(props) {
+    super(props);
 
     this.state = {
-      count: 0
+      count: props.start,
     };
   }
-  componentDidMount() {
-    const { start } = this.props;
-    this.setState({ count: start });
-    setInterval(() => {
-      this.setState({ count: this.state.count + 1 });
-    }, 1000);
+
+  componentWillUnmount() {
+    window.clearInterval(this.interval);
   }
+
+  componentDidMount() {
+    this.interval = setInterval(() => {
+      this.setState({ count: this.state.count + 1 });
+    }, this.props.interval);
+  }
+
   render() {
-    const { count } = this.state;
-    const { title } = this.props;
     return (
-      <div>
-        <div>{title}: {count}</div>
-      </div>
+      <div>{this.state.count}</div>
     );
   }
 }
