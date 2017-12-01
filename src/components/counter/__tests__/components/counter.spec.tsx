@@ -10,7 +10,7 @@ describe('<Counter />', () => {
   it('Counter to render with start time 10', () => {
     const counter = TestUtils.renderIntoDocument(
       <Counter start={10} />
-    );
+    ) as React.ReactInstance;
     const counterNode = ReactDOM.findDOMNode(counter);
     expect(counterNode).toMatchSnapshot();
   });
