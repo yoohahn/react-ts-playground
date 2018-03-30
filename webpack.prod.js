@@ -9,17 +9,14 @@ const filename = '[name].[hash:6]';
 const chunkFilename = '[name].[chunkhash:6]';
 
 module.exports = {
-  mode: 'development',
-  devtool: 'eval',
-  entry: [
-    'react-hot-loader/patch',
-    './index.tsx'
-  ],
+  mode: 'production',
+  devtool: 'source-map',
+  entry: './index.tsx',
   output: {
     jsonpFunction: '__myJSONP__',
     filename: `js/${filename}.js`,
     chunkFilename: `js/${chunkFilename}.js`,
-    publicPath: '/',
+    publicPath: '',
     path: resolve(__dirname, 'dist')
   },
   context: resolve(__dirname, 'src'),
@@ -30,22 +27,16 @@ module.exports = {
     rules: [
       {
         test: /\.tsx?$/,
-        loader: [
-          {
-            loader: 'babel-loader',
-            options: {
-              babelrc: true,
-              plugins: ['react-hot-loader/babel'],
-            },
-          },
-          'ts-loader'
-        ],
+        loader: 'ts-loader',
         include: resolve(__dirname, 'src'),
         exclude: resolve(__dirname, 'node_modules')
       },
       {
         test: /\.css$/,
-        loader: [MiniCssExtractPlugin.loader, 'css-loader'],
+        loader: [
+          MiniCssExtractPlugin.loader,
+          { loader: 'css-loader', options: { minimize: true } }
+        ],
         include: resolve(__dirname, 'src'),
         exclude: resolve(__dirname, 'node_modules')
       },
@@ -65,8 +56,6 @@ module.exports = {
       filename: `css/${filename}.css`,
       chunkFilename: `css/${chunkFilename}.css`,
     }),
-    new webpack.HotModuleReplacementPlugin(),
-    new webpack.NamedModulesPlugin(),
     new HtmlWebpackPlugin({
       inject: true,
       template: 'index.html',
@@ -74,10 +63,7 @@ module.exports = {
       chunksSortMode: 'dependency'
     }),
     new webpack.DefinePlugin({
-      __DEV__: true,
-      'process.env': {
-        NODE_ENV: JSON.stringify('development')
-      }
+      __DEV__: false
     })
   ],
   optimization: {
@@ -86,8 +72,5 @@ module.exports = {
       name: true,
     },
     runtimeChunk: true
-  },
-  devServer: {
-    hot: true
   }
 };
