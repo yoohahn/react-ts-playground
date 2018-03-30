@@ -1,17 +1,24 @@
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+
 const { resolve, join } = require('path');
 
 const nodeModulesFolder = join(__dirname, 'node_modules');
+const filename = '[name].[hash:6]';
+const chunkFilename = '[name].[chunkhash:6]';
+
 module.exports = {
-  devtool: 'inline-source-map',
+  mode: 'development',
+  devtool: 'eval',
   entry: [
     'react-hot-loader/patch',
     './index.tsx'
   ],
   output: {
-    filename: `js/[name].js`,
-    chunkFilename: `js/async/[name].js`,
+    jsonpFunction: '__myJSONP__',
+    filename: `js/${filename}.js`,
+    chunkFilename: `js/async/${chunkFilename}.js`,
     publicPath: '/',
     path: resolve(__dirname, 'dist')
   },
@@ -19,18 +26,32 @@ module.exports = {
   resolve: {
     extensions: ['.ts', '.tsx', '.js', 'json', '.jsx']
   },
-  devtool: 'source-map',
   module: {
-    loaders: [
+    rules: [
       {
         test: /\.tsx?$/,
-        loader: ['react-hot-loader/webpack', 'ts-loader'],
+        loader: [
+          {
+            loader: 'babel-loader',
+            options: {
+              babelrc: true,
+              plugins: ['react-hot-loader/babel'],
+            },
+          },
+          'ts-loader'
+        ]
+      },
+      /*
+      {
+        test: /\.tsx?$/,
+        loader: 'ts-loader',
         include: resolve(__dirname, 'src'),
         exclude: resolve(__dirname, 'node_modules')
       },
+      */
       {
         test: /\.css$/,
-        loader: ['style-loader', 'css-loader'],
+        loader: [MiniCssExtractPlugin.loader, 'css-loader'],
         include: resolve(__dirname, 'src'),
         exclude: resolve(__dirname, 'node_modules')
       },
@@ -39,40 +60,39 @@ module.exports = {
         use: {
           loader: 'file-loader',
           options: {
-            name: 'img/[name].[hash:base64:5].[ext]'
+            name: `img/${filename}.[ext]`
           }
         }
       },
     ]
   },
   plugins: [
+    new MiniCssExtractPlugin({
+      filename: `css/${filename}.css`,
+      chunkFilename: `css/${chunkFilename}.css`,
+    }),
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NamedModulesPlugin(),
     new HtmlWebpackPlugin({
-        inject: true,
-        template: 'index.html'
-     }),
-     new webpack.DefinePlugin({
-       __DEV__: true,
-       'process.env': {
-         NODE_ENV: JSON.stringify('development')
-       }
-     }),
-     new webpack.optimize.CommonsChunkPlugin({
-        name: 'vendor',
-        minChunks(module) {
-          // any required modules inside nodeModulesFolder are extracted to vendor
-          return (
-            module.resource &&
-            /\.js$/.test(module.resource) &&
-            module.resource.indexOf(nodeModulesFolder) === 0
-          );
-        }
-      }),
-      new webpack.optimize.CommonsChunkPlugin({
-        name: 'manifest'
-      })
+      inject: true,
+      template: 'index.html',
+      inject: 'body',
+      chunksSortMode: 'dependency'
+    }),
+    new webpack.DefinePlugin({
+      __DEV__: true,
+      'process.env': {
+        NODE_ENV: JSON.stringify('development')
+      }
+    })
   ],
+  optimization: {
+    splitChunks: {
+      chunks: 'all',
+      name: true,
+    },
+    runtimeChunk: true
+  },
   devServer: {
     hot: true
   }
