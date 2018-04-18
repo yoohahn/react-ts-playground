@@ -11,6 +11,13 @@ jobs:
           command: |
             sudo chmod 755 .circleci/*.sh
             sh .circleci/setup.sh
+#      - run:
+#          name: Greenkeper lock
+#          command: |
+#            # Install greenkeeper lock
+#            npm install -g greenkeeper-lockfile@1
+#            greenkeeper-lockfile-update
+#            greenkeeper-lockfile-upload
       - run:
           name: Checking Versions
           background: true
