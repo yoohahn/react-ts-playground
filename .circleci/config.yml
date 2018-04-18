@@ -1,0 +1,34 @@
+version: 2
+
+jobs:
+  build:
+    machine: true
+    working_directory: ~/react-ts-playground
+    steps:
+      - checkout
+      - run:
+          name: Install node and chrome
+          command: |
+            sudo chmod 755 .circleci/*.sh
+            sh .circleci/setup.sh
+      - run:
+          name: Checking Versions
+          background: true
+          command: |
+            node --version
+            npm --version
+      - restore_cache:
+          key: node_modules-cache-{{ checksum "package.json" }}
+      - run:
+          name: Install NPM modules
+          command: npm install
+      - save_cache:
+          key: node_modules-cache-{{ checksum "package.json" }}
+          paths:
+            - node_modules
+      - run:
+          name: Build
+          command: npm run build
+      - run:
+          name: Test
+          command: npm run test
