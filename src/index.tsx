@@ -4,7 +4,6 @@ import App from './app';
 import './index.css';
 
 declare const __DEV__: boolean;
-declare const __PROD__: boolean;
 declare const module: any;
 
 const rootElm = document.getElementById('body') as HTMLElement;
@@ -21,7 +20,7 @@ const render = (Component: typeof App) => {
     module.hot.accept('./app', () => render(App));
   }
 
-  if (__PROD__) {
+  if (!__DEV__) {
     ReactDOM.render(
       <App />,
       rootElm,
