@@ -45,7 +45,15 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        loader: [MiniCssExtractPlugin.loader, 'css-loader'],
+        loader: [MiniCssExtractPlugin.loader, {
+          loader: 'typings-for-css-modules-loader',
+          options: {
+            namedExport: true,
+            modules: true,
+            importLoaders: 1,
+            localIdentName: '[local]-[hash:base64:5]'
+          },
+        }],
         include: resolve(__dirname, 'src'),
         exclude: resolve(__dirname, 'node_modules')
       },
@@ -61,6 +69,9 @@ module.exports = {
     ]
   },
   plugins: [
+    new webpack.WatchIgnorePlugin([
+      /css\.d\.ts$/
+    ]),
     new MiniCssExtractPlugin({
       filename: `css/${filename}.css`,
       chunkFilename: `css/${chunkFilename}.css`,

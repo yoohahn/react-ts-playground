@@ -35,7 +35,17 @@ module.exports = {
         test: /\.css$/,
         loader: [
           MiniCssExtractPlugin.loader,
-          { loader: 'css-loader', options: { minimize: true } }
+          {
+            loader: [MiniCssExtractPlugin.loader, {
+              loader: 'css-loader',
+              options: {
+                modules: true,
+                importLoaders: 1,
+                minimize: true,
+                localIdentName: '[hash:base64:8]'
+              }
+            }],
+          }
         ],
         include: resolve(__dirname, 'src'),
         exclude: resolve(__dirname, 'node_modules')
