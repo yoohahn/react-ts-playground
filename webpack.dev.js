@@ -10,7 +10,7 @@ const chunkFilename = '[name].[chunkhash:6]';
 
 module.exports = {
   mode: 'development',
-  devtool: 'eval',
+  devtool: 'source-map',
   entry: [
     'react-hot-loader/patch',
     './index.tsx'
@@ -24,7 +24,7 @@ module.exports = {
   },
   context: resolve(__dirname, 'src'),
   resolve: {
-    extensions: ['.ts', '.tsx', '.js', 'json', '.jsx']
+    extensions: ['.ts', '.tsx', '.js', '.jsx', 'json']
   },
   module: {
     rules: [

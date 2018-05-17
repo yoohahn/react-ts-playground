@@ -21,7 +21,7 @@ module.exports = {
   },
   context: resolve(__dirname, 'src'),
   resolve: {
-    extensions: ['.ts', '.tsx', '.js', 'json', '.jsx']
+    extensions: ['.ts', '.tsx', '.js', '.jsx', 'json']
   },
   module: {
     rules: [
@@ -33,20 +33,15 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        loader: [
-          MiniCssExtractPlugin.loader,
-          {
-            loader: [MiniCssExtractPlugin.loader, {
-              loader: 'css-loader',
-              options: {
-                modules: true,
-                importLoaders: 1,
-                minimize: true,
-                localIdentName: '[hash:base64:8]'
-              }
-            }],
+        loader: [MiniCssExtractPlugin.loader, {
+          loader: 'css-loader',
+          options: {
+            modules: true,
+            importLoaders: 1,
+            minimize: true,
+            localIdentName: '[hash:base64:8]'
           }
-        ],
+        }],
         include: resolve(__dirname, 'src'),
         exclude: resolve(__dirname, 'node_modules')
       },
