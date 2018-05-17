@@ -52,5 +52,8 @@
       "node_modules",
       "src"
     ]
+  },
+  "dependencies": {
+    "webpack-merge": "^4.1.2"
   }
 }
