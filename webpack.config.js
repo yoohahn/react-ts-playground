@@ -57,7 +57,5 @@ module.exports = () => {
     }
   };
 
-  const finalConfig = require(`./webpack.${env}.js`)(config);
-
-  return finalConfig;
+  return require(`./webpack.${env}.js`)(config);
 }

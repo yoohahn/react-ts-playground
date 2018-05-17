@@ -1,7 +1,9 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`<Counter /> Counter to render with start time 10 1`] = `
-<div>
+<div
+  class="counter"
+>
   10
 </div>
 `;
