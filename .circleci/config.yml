@@ -2,15 +2,10 @@ version: 2
 
 jobs:
   build:
-    machine: true
-    working_directory: ~/react-ts-playground
+    docker:
+      - image: circleci/node:12.4.0-browsers
     steps:
       - checkout
-      - run:
-          name: Install node and chrome
-          command: |
-            sudo chmod 755 .circleci/*.sh
-            sh .circleci/setup.sh
       - run:
           name: Checking Versions
           background: true
@@ -19,14 +14,17 @@ jobs:
             npm --version
             yarn --version
       - restore_cache:
-          key: node_modules-cache-{{ checksum "package.json" }}
+          name: Restore Yarn Package Cache
+          keys:
+            - yarn-packages-{{ checksum "yarn.lock" }}
       - run:
-          name: Install NPM modules
-          command: yarn
+          name: Install Yarn modules
+          command: yarn install --frozen-lockfile
       - save_cache:
-          key: node_modules-cache-{{ checksum "package.json" }}
+          name: Save Yarn Package Cache
+          key: yarn-packages-{{ checksum "yarn.lock" }}
           paths:
-            - node_modules
+            - ~/.cache/yarn
       - run:
           name: Build
           command: yarn build
