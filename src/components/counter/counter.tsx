@@ -1,5 +1,5 @@
-import * as React from 'react';
-import styles from './counter.css';
+import React from "react";
+import styles from "./counter.css";
 
 interface ICounterStates {
   count: number;
@@ -13,14 +13,14 @@ interface ICounterProps extends React.Props<Counter> {
 class Counter extends React.Component<ICounterProps, ICounterStates> {
   interval: number;
   public static defaultProps: Partial<ICounterProps> = {
-    interval: 1000,
+    interval: 1000
   };
 
   constructor(props) {
     super(props);
 
     this.state = {
-      count: props.start,
+      count: props.start
     };
   }
 
@@ -35,9 +35,7 @@ class Counter extends React.Component<ICounterProps, ICounterStates> {
   }
 
   render() {
-    return (
-      <div className={styles.counter}>{this.state.count}</div>
-    );
+    return <div className={styles.counter}>{this.state.count}</div>;
   }
 }
 

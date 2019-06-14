@@ -17,18 +17,21 @@ jobs:
           command: |
             node --version
             npm --version
+            yarn --version
       - restore_cache:
           key: node_modules-cache-{{ checksum "package.json" }}
       - run:
           name: Install NPM modules
-          command: npm install
+          command: yarn
       - save_cache:
           key: node_modules-cache-{{ checksum "package.json" }}
           paths:
             - node_modules
       - run:
           name: Build
-          command: npm run build
+          command: yarn build
       - run:
           name: Test
-          command: npm run test
+          command: yarn test
+      - store_artifacts:
+          path: dist/

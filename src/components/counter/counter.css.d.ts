@@ -1,1 +1,5 @@
-export const counter: string;
+declare const styles: {
+  readonly "counter": string;
+};
+export = styles;
+
