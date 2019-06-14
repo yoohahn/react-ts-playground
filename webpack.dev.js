@@ -1,17 +1,14 @@
-const webpack = require('webpack');
-const merge = require('webpack-merge');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const { resolve } = require("path");
+const webpack = require("webpack");
+const merge = require("webpack-merge");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
-const { resolve } = require('path');
-
-module.exports = (commonConfig) => {
+module.exports = commonConfig => {
   const devConf = {
-    mode: 'development',
-    entry: [
-      'react-hot-loader/patch'
-    ],
+    mode: "development",
+    entry: ["react-hot-loader/patch"],
     output: {
-      publicPath: '/'
+      publicPath: "/"
     },
     module: {
       rules: [
@@ -19,46 +16,60 @@ module.exports = (commonConfig) => {
           test: /\.tsx?$/,
           loader: [
             {
-              loader: 'babel-loader',
+              loader: "babel-loader",
               options: {
                 babelrc: true,
-                plugins: ['react-hot-loader/babel'],
-              },
+                plugins: ["react-hot-loader/babel"]
+              }
             },
-            'ts-loader'
+            "ts-loader"
           ],
-          include: resolve(__dirname, 'src'),
-          exclude: resolve(__dirname, 'node_modules')
+          include: resolve(__dirname, "src"),
+          exclude: resolve(__dirname, "node_modules")
         },
         {
           test: /\.css$/,
-          loader: [MiniCssExtractPlugin.loader, {
-            loader: 'typings-for-css-modules-loader',
-            options: {
-              namedExport: true,
-              modules: true,
-              importLoaders: 1,
-              localIdentName: '[local]-[hash:base64:5]'
+          use: [
+            {
+              loader: MiniCssExtractPlugin.loader,
+              options: {
+                hmr: true,
+                reloadAll: true
+              }
             },
-          }],
-          include: resolve(__dirname, 'src'),
-          exclude: resolve(__dirname, 'node_modules')
+            {
+              loader: "css-loader",
+              options: {
+                modules: {
+                  mode: "local",
+                  localIdentName: "[local]-[hash:base64:5]"
+                },
+                importLoaders: 1
+              }
+            },
+            {
+              loader: resolve(__dirname, "definition-loader.js")
+            }
+          ],
+          include: resolve(__dirname, "src"),
+          exclude: resolve(__dirname, "node_modules")
         }
       ]
     },
     plugins: [
-      new webpack.WatchIgnorePlugin([
-        /css\.d\.ts$/
-      ]),
+      new webpack.WatchIgnorePlugin([/css\.d\.ts$/]),
       new webpack.HotModuleReplacementPlugin(),
       new webpack.NamedModulesPlugin(),
       new webpack.DefinePlugin({
         __DEV__: true,
-        'process.env': {
-          NODE_ENV: JSON.stringify('development')
+        "process.env": {
+          NODE_ENV: JSON.stringify("development")
         }
       })
     ],
+    resolve: {
+      alias: { "react-dom": "@hot-loader/react-dom" }
+    },
     devServer: {
       hot: true
     }

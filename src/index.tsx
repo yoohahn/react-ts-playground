@@ -1,30 +1,29 @@
-import * as React from 'react';
-import * as ReactDOM from 'react-dom';
-import App from './app';
-import './index.css';
+import React from "react";
+import ReactDOM from "react-dom";
+import App from "./app";
+import "./index.css";
 
 declare const __DEV__: boolean;
-declare const module: any;
+declare const module: {
+  hot: { accept: (file: string, fn: () => void) => void };
+};
 
-const rootElm = document.getElementById('body') as HTMLElement;
+const rootElm = document.getElementById("body") as HTMLElement;
 const render = (Component: typeof App) => {
   if (__DEV__) {
-    const { AppContainer } = require('react-hot-loader');
+    const { AppContainer } = require("react-hot-loader");
     ReactDOM.render(
       <AppContainer>
-        <App />
+        <Component />
       </AppContainer>,
-      rootElm,
+      rootElm
     );
 
-    module.hot.accept('./app', () => render(App));
+    module.hot.accept("./app", () => render(Component));
   }
 
   if (!__DEV__) {
-    ReactDOM.render(
-      <App />,
-      rootElm,
-    );
+    ReactDOM.render(<Component />, rootElm);
   }
 };
 
